@@ -28,14 +28,9 @@ for _ in $(seq 1 60); do
   sleep 2
 done
 
-# 5. Run the head-to-head benchmark (MariaDB vs FairCom)
+# 5. Run the benchmark (head-to-head result + FairCom REST load diagnostics)
 echo "Running benchmark..."
 python3 scripts/benchmark.py
-
-# 6. Run the FairCom REST load diagnostics (where does the time go?)
-echo
-echo "Running FairCom load diagnostics..."
-python3 scripts/diagnose_faircom.py
 
 echo
 echo "Done. Stop the databases with: docker compose down"

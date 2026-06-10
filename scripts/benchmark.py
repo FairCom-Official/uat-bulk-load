@@ -62,6 +62,10 @@ def main() -> None:
             f"{ratio:.1f}x faster on this run.\n"
         )
 
+    # The FairCom load was instrumented as it ran, so show where its time went
+    # without loading the data a second time.
+    load_faircom.print_diagnostics(faircom)
+
 
 if __name__ == "__main__":
     main()

@@ -58,7 +58,7 @@ docker compose down
 
 ## What you will see
 
-You get two reports.
+The benchmark loads the data once into each database and then prints two parts.
 
 ### 1. The head-to-head result
 
@@ -79,9 +79,10 @@ You get two reports.
 
 ### 2. The FairCom diagnostics report
 
-This second report helps the engineering team understand where FairCom spends
+This second part helps the engineering team understand where FairCom spends
 its time when loading over the REST API, so the loading process can be improved.
-It breaks the load into phases and shows per-request timing:
+It is measured during the same load shown above (the data is not loaded again),
+breaks the load into phases, and shows per-request timing:
 
 ```
   PHASE BREAKDOWN (wall-clock)
@@ -124,10 +125,9 @@ If you only want one part, you can run these directly after the databases are up
 
 | Command | What it does |
 | ----------------------------------------- | --------------------------------------------------- |
-| `python3 scripts/benchmark.py` | The head-to-head comparison (both databases). |
+| `python3 scripts/benchmark.py` | The head-to-head comparison plus FairCom diagnostics. |
 | `python3 scripts/load_sql.py` | Load the SQL database only. |
-| `python3 scripts/load_faircom.py` | Load FairCom only. |
-| `python3 scripts/diagnose_faircom.py` | The detailed FairCom timing report. |
+| `python3 scripts/load_faircom.py` | Load FairCom only (also prints its diagnostics). |
 | `python3 scripts/sweep_faircom.py` | Try several batch sizes, report the fastest. |
 | `python3 scripts/sweep_faircom_workers.py`| Try several parallel-request counts, report fastest.|
 
@@ -158,9 +158,9 @@ data/sample.csv              The generated sample data (created on first run)
 scripts/
   generate_data.py           Creates the shared sample data file
   load_sql.py                Loads the SQL database via LOAD DATA LOCAL INFILE
-  load_faircom.py            Loads FairCom via the REST insertRecords API
-  benchmark.py               Runs both and prints the comparison
-  diagnose_faircom.py        Detailed FairCom timing report (for engineering)
+  load_faircom.py            Loads FairCom via the REST insertRecords API (and
+                             prints where the load spent its time)
+  benchmark.py               Runs both and prints the comparison + diagnostics
   sweep_faircom.py           Finds the best FairCom batch size
   sweep_faircom_workers.py   Finds the best FairCom parallel-request count
   config.py / progress.py    Shared internals
