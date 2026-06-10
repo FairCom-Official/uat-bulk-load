@@ -1,0 +1,9 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+data/*.csv
+results/
+
+# Local AI assistant instructions — not tracked.
+.github/copilot-instructions.md
