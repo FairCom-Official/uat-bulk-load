@@ -12,7 +12,7 @@ export DOCKER_CLI_HINTS=false
 python3 -m pip install --quiet -r requirements.txt
 
 # 3. Start both databases
-echo "Starting FairCom Edge and MariaDB containers..."
+echo "Starting FairCom and MariaDB containers..."
 docker compose up -d
 
 # 4. Wait for both to report healthy

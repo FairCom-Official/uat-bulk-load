@@ -1,7 +1,9 @@
-"""Load the sample dataset into FairCom Edge via the JSON Action REST API.
+"""Load the sample dataset into FairCom via the JSON Action REST API.
 
-FairCom has no LOAD DATA INFILE statement, so we read the shared CSV in Python
-and post it to the server using the JSON DB "insertRecords" action in batches.
+The same REST path works for any FairCom server (DB, Edge, Cloud), since Edge is
+built on FairCom DB. FairCom has no LOAD DATA INFILE statement, so we read the
+shared CSV in Python and post it to the server using the JSON DB "insertRecords"
+action in batches.
 
 Flow (all POSTs go to a single /api endpoint):
   1. createSession (api=admin) -> authToken
@@ -24,6 +26,7 @@ from config import (
     COLUMNS,
     DATA_FILE,
     FAIRCOM_BATCH_SIZE,
+    FAIRCOM_LABEL,
     FAIRCOM_PASSWORD,
     FAIRCOM_URL,
     FAIRCOM_USER,
@@ -185,7 +188,7 @@ def load(
 
     # ----- insert (this is what the benchmark times) ----------------------
     insert_start = time.perf_counter()
-    bar = make_bar("FairCom load", len(records)) if show_progress else None
+    bar = make_bar(f"{FAIRCOM_LABEL} load", len(records)) if show_progress else None
 
     if workers <= 1:
         for batch in batches:
@@ -217,7 +220,7 @@ def load(
     session.close()
 
     return {
-        "engine": "FairCom Edge (JSON insertRecords)",
+        "engine": f"{FAIRCOM_LABEL} (JSON insertRecords)",
         "rows": len(records),
         "seconds": insert_seconds,
         "batch_size": batch_size,

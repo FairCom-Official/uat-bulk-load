@@ -21,7 +21,9 @@ COLUMNS = ["id", "device_id", "metric", "reading", "recorded_at", "status"]
 TABLE_NAME = os.getenv("TABLE_NAME", "sensor_readings")
 ROW_COUNT = int(os.getenv("ROW_COUNT", "100000"))
 
-# FairCom (JSON Action REST API)
+# FairCom (JSON Action REST API). The same REST path works for any FairCom
+# server (DB, Edge, Cloud); FAIRCOM_LABEL is the name shown in benchmark output.
+FAIRCOM_LABEL = os.getenv("FAIRCOM_LABEL", "FairCom")
 FAIRCOM_URL = os.getenv("FAIRCOM_URL", "http://localhost:8080/api")
 FAIRCOM_USER = os.getenv("FAIRCOM_USER", "ADMIN")
 FAIRCOM_PASSWORD = os.getenv("FAIRCOM_PASSWORD", "ADMIN")

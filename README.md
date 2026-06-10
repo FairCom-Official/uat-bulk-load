@@ -1,12 +1,14 @@
-# Bulk Load Benchmark: FairCom Edge vs a SQL Database
+# Bulk Load Benchmark: FairCom vs a SQL Database
 
 This tool measures how fast the same batch of data loads into two different
 databases and shows the results next to each other.
 
 - A SQL database (MariaDB by default, and any MySQL-compatible server) loads the
   data using its built-in `LOAD DATA LOCAL INFILE` command.
-- FairCom Edge loads the same data using its REST API (the `insertRecords`
-  action), because FairCom is API-first and has no equivalent bulk-file command.
+- FairCom loads the same data using its REST API (the `insertRecords` action),
+  because FairCom is API-first and has no equivalent bulk-file command. The
+  default image is FairCom Edge, but the same REST path works for any FairCom
+  server (DB, Edge, or Cloud), since Edge is built on FairCom DB.
 
 Both databases run in Docker on your own machine and load the identical file, so
 the comparison is fair.
@@ -67,7 +69,7 @@ The benchmark loads the data once into each database and then prints two parts.
   BULK LOAD BENCHMARK RESULTS
 ==============================================================================
   MariaDB (LOAD DATA LOCAL INFILE)          300,000 rows      0.47s       633,472 rows/sec
-  FairCom Edge (JSON insertRecords)         300,000 rows      5.23s        57,372 rows/sec
+  FairCom (JSON insertRecords)              300,000 rows      5.23s        57,372 rows/sec
 ==============================================================================
 
   MariaDB finished 11.0x faster on this run.
@@ -111,6 +113,7 @@ any text editor and change the values.
 | ------------------- | ------------------------------------------------------ | ------- |
 | `ROW_COUNT` | How many rows of data to load into both databases. | 100000 |
 | `SQL_ENGINE_LABEL` | The name shown for the SQL database in the results. | MariaDB |
+| `FAIRCOM_LABEL` | The name shown for the FairCom server in the results. | FairCom |
 | `FAIRCOM_BATCH_SIZE`| How many rows FairCom sends per REST request. | 5000 |
 | `FAIRCOM_WORKERS` | How many requests FairCom sends at once (in parallel). | 4 |
 | `MARIADB_PORT` | The port the SQL database listens on (change if 3306 is taken). | 3306 |
@@ -136,8 +139,8 @@ The two `sweep_*` scripts accept custom values, for example
 
 ## Good to know
 
-- FairCom evaluation license: the FairCom Edge container runs for 3 hours at a
-  time on the free evaluation license. If a run fails because FairCom stopped,
+- FairCom evaluation license: the default FairCom Edge container runs for 3 hours
+  at a time on the free evaluation license. If a run fails because FairCom stopped,
   restart it with `docker compose up -d faircom-edge` and try again.
 - FairCom login: the REST API is at `http://localhost:8080/api`, with
   username/password `ADMIN` / `ADMIN`.
