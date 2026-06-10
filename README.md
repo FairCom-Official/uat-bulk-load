@@ -1,9 +1,10 @@
-# Bulk Load Benchmark: FairCom Edge vs MariaDB
+# Bulk Load Benchmark: FairCom Edge vs a SQL Database
 
 This tool measures how fast the same batch of data loads into two different
 databases and shows the results next to each other.
 
-- MariaDB loads the data using its built-in `LOAD DATA LOCAL INFILE` command.
+- A SQL database (MariaDB by default, and any MySQL-compatible server) loads the
+  data using its built-in `LOAD DATA LOCAL INFILE` command.
 - FairCom Edge loads the same data using its REST API (the `insertRecords`
   action), because FairCom is API-first and has no equivalent bulk-file command.
 
@@ -149,7 +150,7 @@ The two `sweep_*` scripts accept custom values, for example
 
 ```
 run.sh                       One command to run everything
-docker-compose.yml           Defines the two databases (FairCom + MariaDB)
+docker-compose.yml           Defines the two databases (FairCom + SQL database)
 .env                         All settings (rows, batch size, workers, ports)
 requirements.txt             The small Python helpers this tool installs
 sql/schema.sql               The table definition for the SQL database
