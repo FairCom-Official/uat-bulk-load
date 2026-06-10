@@ -321,14 +321,14 @@ def print_diagnostics(result: dict) -> None:
 
     print("\n  TAKEAWAY")
     if ser_sum > rt_sum:
-        print("  - Client-side JSON serialization dominates: a leaner wire")
-        print("    format (e.g. dataFormat 'arrays') or streaming encoder would help.")
+        print("  - Most of the time is spent on the client building the JSON to send.")
+        print("    A leaner request format would speed this up more than the server.")
     else:
-        print("  - Round-trip (network + server insert) dominates: the win is")
-        print("    server-side ingest speed and/or higher useful concurrency.")
+        print("  - Most of the time is spent waiting on each request to come back")
+        print("    (network plus the server writing the rows), not on the client.")
     if workers > 1 and concurrency < workers * 0.75:
-        print(f"  - Only ~{concurrency:.1f} of {workers} workers' worth of work overlapped:")
-        print("    requests are serializing somewhere (server lock or single queue?).")
+        print(f"  - Only about {concurrency:.1f} of {workers} requests were truly running at once,")
+        print("    so adding more workers may not help until that bottleneck is cleared.")
     print(bar + "\n")
 
 
