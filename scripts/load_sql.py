@@ -1,9 +1,11 @@
-"""Load the sample dataset into MariaDB using LOAD DATA LOCAL INFILE.
+"""Load the sample dataset into a SQL database using LOAD DATA LOCAL INFILE.
 
-LOAD DATA LOCAL INFILE streams the CSV from the *client* (this Python process)
-to the server over the connection, rather than the server reading a file off
-its own disk. That makes it a fairer comparison to the FairCom loader, which
-also sends the data over the network. The server is started with
+The target engine is MariaDB by default, but the same path works for any
+MySQL-compatible server (set SQL_ENGINE_LABEL / SQL_* connection settings in
+.env). LOAD DATA LOCAL INFILE streams the CSV from the *client* (this Python
+process) to the server over the connection, rather than the server reading a
+file off its own disk. That makes it a fairer comparison to the FairCom loader,
+which also sends the data over the network. The server is started with
 --local-infile=1 so it accepts client-streamed files.
 """
 from __future__ import annotations
@@ -15,12 +17,13 @@ import pymysql
 
 from config import (
     DATA_FILE,
-    MARIADB_DATABASE,
-    MARIADB_HOST,
-    MARIADB_PASSWORD,
-    MARIADB_PORT,
-    MARIADB_USER,
     ROOT,
+    SQL_DATABASE,
+    SQL_ENGINE_LABEL,
+    SQL_HOST,
+    SQL_PASSWORD,
+    SQL_PORT,
+    SQL_USER,
     TABLE_NAME,
 )
 from progress import make_bar
@@ -28,18 +31,18 @@ from progress import make_bar
 
 def _connect() -> pymysql.connections.Connection:
     return pymysql.connect(
-        host=MARIADB_HOST,
-        port=MARIADB_PORT,
-        user=MARIADB_USER,
-        password=MARIADB_PASSWORD,
-        database=MARIADB_DATABASE,
+        host=SQL_HOST,
+        port=SQL_PORT,
+        user=SQL_USER,
+        password=SQL_PASSWORD,
+        database=SQL_DATABASE,
         local_infile=True,
         autocommit=True,
     )
 
 
 def _create_table(conn: pymysql.connections.Connection) -> None:
-    schema = (ROOT / "sql" / "mariadb_schema.sql").read_text()
+    schema = (ROOT / "sql" / "schema.sql").read_text()
     with conn.cursor() as cur:
         for statement in filter(None, (s.strip() for s in schema.split(";"))):
             cur.execute(statement)
@@ -85,7 +88,7 @@ def load() -> dict:
         worker = threading.Thread(target=_run_load)
         worker.start()
 
-        bar = make_bar("MariaDB load", total)
+        bar = make_bar(f"{SQL_ENGINE_LABEL} load", total)
         poller = _connect()
         try:
             while worker.is_alive():
@@ -115,7 +118,7 @@ def load() -> dict:
         conn.close()
 
     return {
-        "engine": "MariaDB (LOAD DATA LOCAL INFILE)",
+        "engine": f"{SQL_ENGINE_LABEL} (LOAD DATA LOCAL INFILE)",
         "rows": rows,
         "seconds": elapsed,
     }

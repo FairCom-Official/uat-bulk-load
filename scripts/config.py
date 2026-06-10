@@ -29,12 +29,18 @@ FAIRCOM_BATCH_SIZE = int(os.getenv("FAIRCOM_BATCH_SIZE", "5000"))
 # Number of concurrent threads posting insertRecords batches in parallel.
 FAIRCOM_WORKERS = int(os.getenv("FAIRCOM_WORKERS", "4"))
 
-# MariaDB
-MARIADB_HOST = os.getenv("MARIADB_HOST", "127.0.0.1")
-MARIADB_PORT = int(os.getenv("MARIADB_PORT", "3306"))
-MARIADB_USER = os.getenv("MARIADB_USER", "root")
-MARIADB_PASSWORD = os.getenv("MARIADB_ROOT_PASSWORD", "benchmark")
-MARIADB_DATABASE = os.getenv("MARIADB_DATABASE", "benchmark")
+# SQL engine (currently MariaDB; MySQL / PostgreSQL / etc. can be added later).
+# SQL_ENGINE_LABEL is the human-readable name shown in benchmark output.
+SQL_ENGINE = os.getenv("SQL_ENGINE", "mariadb")
+SQL_ENGINE_LABEL = os.getenv("SQL_ENGINE_LABEL", "MariaDB")
 
-# Path to the CSV as seen *inside* the MariaDB container (mounted volume).
-MARIADB_INFILE_PATH = "/data/sample.csv"
+# Connection settings. New generic SQL_* names take precedence; the legacy
+# MARIADB_* names are still honored so existing .env files keep working.
+SQL_HOST = os.getenv("SQL_HOST", os.getenv("MARIADB_HOST", "127.0.0.1"))
+SQL_PORT = int(os.getenv("SQL_PORT", os.getenv("MARIADB_PORT", "3306")))
+SQL_USER = os.getenv("SQL_USER", os.getenv("MARIADB_USER", "root"))
+SQL_PASSWORD = os.getenv("SQL_PASSWORD", os.getenv("MARIADB_ROOT_PASSWORD", "benchmark"))
+SQL_DATABASE = os.getenv("SQL_DATABASE", os.getenv("MARIADB_DATABASE", "benchmark"))
+
+# Path to the CSV as seen *inside* the database container (mounted volume).
+SQL_INFILE_PATH = "/data/sample.csv"

@@ -108,9 +108,10 @@ any text editor and change the values.
 | Setting | What it does | Default |
 | ------------------- | ------------------------------------------------------ | ------- |
 | `ROW_COUNT` | How many rows of data to load into both databases. | 100000 |
+| `SQL_ENGINE_LABEL` | The name shown for the SQL database in the results. | MariaDB |
 | `FAIRCOM_BATCH_SIZE`| How many rows FairCom sends per REST request. | 5000 |
 | `FAIRCOM_WORKERS` | How many requests FairCom sends at once (in parallel). | 4 |
-| `MARIADB_PORT` | The port MariaDB listens on (change if 3306 is taken). | 3306 |
+| `MARIADB_PORT` | The port the SQL database listens on (change if 3306 is taken). | 3306 |
 
 After changing `.env`, run `./run.sh` again. If you change `ROW_COUNT`, the tool
 regenerates the data file to match.
@@ -123,7 +124,7 @@ If you only want one part, you can run these directly after the databases are up
 | Command | What it does |
 | ----------------------------------------- | --------------------------------------------------- |
 | `python3 scripts/benchmark.py` | The head-to-head comparison (both databases). |
-| `python3 scripts/load_mariadb.py` | Load MariaDB only. |
+| `python3 scripts/load_sql.py` | Load the SQL database only. |
 | `python3 scripts/load_faircom.py` | Load FairCom only. |
 | `python3 scripts/diagnose_faircom.py` | The detailed FairCom timing report. |
 | `python3 scripts/sweep_faircom.py` | Try several batch sizes, report the fastest. |
@@ -151,11 +152,11 @@ run.sh                       One command to run everything
 docker-compose.yml           Defines the two databases (FairCom + MariaDB)
 .env                         All settings (rows, batch size, workers, ports)
 requirements.txt             The small Python helpers this tool installs
-sql/mariadb_schema.sql       The table definition for MariaDB
+sql/schema.sql               The table definition for the SQL database
 data/sample.csv              The generated sample data (created on first run)
 scripts/
   generate_data.py           Creates the shared sample data file
-  load_mariadb.py            Loads MariaDB via LOAD DATA LOCAL INFILE
+  load_sql.py                Loads the SQL database via LOAD DATA LOCAL INFILE
   load_faircom.py            Loads FairCom via the REST insertRecords API
   benchmark.py               Runs both and prints the comparison
   diagnose_faircom.py        Detailed FairCom timing report (for engineering)

@@ -1,12 +1,12 @@
 """Run both loaders and print a plain-English comparison.
 
-Generates the dataset if it is missing, loads MariaDB and FairCom from the exact
-same CSV, then prints a side-by-side summary.
+Generates the dataset if it is missing, loads the SQL engine and FairCom from
+the exact same CSV, then prints a side-by-side summary.
 """
 from __future__ import annotations
 
 import load_faircom
-import load_mariadb
+import load_sql
 from config import DATA_FILE, ROW_COUNT
 from generate_data import generate
 
@@ -44,18 +44,18 @@ def main() -> None:
 
 
     print("\nLoading data (identical dataset into both engines)...\n")
-    maria = load_mariadb.load()
+    sql = load_sql.load()
     faircom = load_faircom.load()
 
     print("\n" + "=" * 78)
     print("  BULK LOAD BENCHMARK RESULTS")
     print("=" * 78)
-    print(_summary_line(maria))
+    print(_summary_line(sql))
     print(_summary_line(faircom))
     print("=" * 78)
 
-    if maria["seconds"] and faircom["seconds"]:
-        faster, slower = sorted((maria, faircom), key=lambda r: r["seconds"])
+    if sql["seconds"] and faircom["seconds"]:
+        faster, slower = sorted((sql, faircom), key=lambda r: r["seconds"])
         ratio = slower["seconds"] / faster["seconds"]
         print(
             f"\n  {faster['engine'].split('(')[0].strip()} finished "

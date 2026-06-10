@@ -31,7 +31,7 @@ from config import (
 )
 from progress import make_bar
 
-# Field definitions mirror sql/mariadb_schema.sql so both engines hold the same
+# Field definitions mirror sql/schema.sql so both engines hold the same
 # data. "float" is double precision and needs no length/scale.
 FIELDS = [
     {"name": "id", "type": "bigint", "primaryKey": 1, "nullable": False},
