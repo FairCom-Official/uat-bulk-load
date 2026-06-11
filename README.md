@@ -24,14 +24,18 @@ You need three things installed. If you already have them, skip ahead.
    https://www.docker.com/products/docker-desktop/. After installing, open
    Docker Desktop and wait until it says "Running."
 2. Python 3, which runs the loader scripts. Check by typing `python3 --version`
-   in a terminal. If you get a version number, you're good. If not, install it
-   from https://www.python.org/downloads/.
+   in a terminal (on Windows, type `py --version` instead). If you get a version
+   number, you're good. If not, install it from
+   https://www.python.org/downloads/. On Windows, tick "Add Python to PATH" in
+   the installer.
 3. This project folder on your computer (you already have it).
 
 You do not need to create a Python virtual environment. This tool uses your
 system Python directly.
 
 ## How to run it
+
+### macOS / Linux
 
 1. Open the Terminal app.
 2. Go into this project folder. For example:
@@ -42,6 +46,22 @@ system Python directly.
    ```bash
    ./run.sh
    ```
+
+### Windows
+
+1. Open PowerShell.
+2. Go into this project folder. For example:
+   ```powershell
+   cd $HOME\Desktop\work_git\bulk-load
+   ```
+3. Run this one command:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\run.ps1
+   ```
+   Windows blocks unsigned scripts by default, so the `-ExecutionPolicy Bypass`
+   part lets this one script run without changing any system setting. If you'd
+   rather not type it every time, run `Set-ExecutionPolicy -Scope CurrentUser
+   RemoteSigned` once, after which `.\run.ps1` is enough.
 
 That single command does everything for you:
 
@@ -137,6 +157,9 @@ If you only want one part, you can run these directly after the databases are up
 The two `sweep_*` scripts accept custom values, for example
 `python3 scripts/sweep_faircom_workers.py 1 2 4 8`.
 
+On Windows, replace `python3` with `py` in any of the commands above (for
+example `py scripts/benchmark.py`).
+
 ## Good to know
 
 - FairCom evaluation license: the default FairCom Edge container runs for 3 hours
@@ -152,7 +175,8 @@ The two `sweep_*` scripts accept custom values, for example
 ## Project layout
 
 ```
-run.sh                       One command to run everything
+run.sh                       One command to run everything (macOS / Linux)
+run.ps1                      One command to run everything (Windows)
 docker-compose.yml           Defines the two databases (FairCom + SQL database)
 .env                         All settings (rows, batch size, workers, ports)
 requirements.txt             The small Python helpers this tool installs
